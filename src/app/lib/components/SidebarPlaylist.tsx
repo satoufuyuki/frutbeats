@@ -20,7 +20,7 @@ export function SidebarPlaylist() {
   const fetchPlaylists = async ({ pageParam = 0 }) => {
     console.log(pageParam);
     const res = await fetch(
-      `https://api.spotify.com/v1/me/playlists?offset=${pageParam}&limit=10`,
+      `https://api.spotify.com/v1/me/playlists?offset=${pageParam}&limit=20`,
       {
         headers: {
           Authorization: `Bearer ${sessionData?.access_token}`,
@@ -52,6 +52,7 @@ export function SidebarPlaylist() {
     return <PlaylistSkeleton/>
   }
   
+  console.log(data);
   return (
     <InfiniteScroll
       scrollableTarget="sidebar"
@@ -63,7 +64,7 @@ export function SidebarPlaylist() {
     >
       {data?.pages.map((d: ISpotifyUserPlaylistResponse) => d.items.map((p, i) => (
         <div key={i} className='flex justify-center items-center gap-4 rounded-md bg-base-100'>
-          <Image loading="lazy" className='rounded-l-md' src={p.images[0].url} width={35} height={35} alt="Playlist image"/>
+          <Image loading="lazy" className='rounded-l-md' src={p.images[0]?.url ?? "/playlist.jpg"} width={35} height={35} alt="Playlist image"/>
           <a 
             title={p.name.length > 15 ? p.name : ""}
             className='font-bold w-full overflow-hidden whitespace-nowrap'>

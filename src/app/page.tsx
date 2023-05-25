@@ -9,6 +9,7 @@ import { useCallback, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faHome } from '@fortawesome/free-solid-svg-icons';
 import { Sidebar } from './lib/components/Sidebar';
+import { Player } from './lib/components/Player';
 
 export default function Home() {
   const router = useRouter();
@@ -43,8 +44,9 @@ export default function Home() {
     <Navbar/>
     <div className='flex'>
       <Sidebar/>
-      <div className='p-12'>
-        <p>test</p>
+      <div id="content">
+        <div className='p-12'></div>
+        <Player/>
       </div>
     </div>
     <WebPlaybackSDK
