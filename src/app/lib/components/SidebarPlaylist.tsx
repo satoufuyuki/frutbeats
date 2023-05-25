@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { ISpotifyUserPlaylistResponse } from "../typings";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/navigation";
 
 const PlaylistSkeleton = () => <ul className="flex flex-col gap-y-2">
     {new Array(3).fill(null).map((_, i) => 
@@ -17,8 +18,9 @@ export function SidebarPlaylist() {
     required: true
   });
   
+  const router = useRouter();
+
   const fetchPlaylists = async ({ pageParam = 0 }) => {
-    console.log(pageParam);
     const res = await fetch(
       `https://api.spotify.com/v1/me/playlists?offset=${pageParam}&limit=20`,
       {
@@ -42,7 +44,6 @@ export function SidebarPlaylist() {
     queryKey: ['playlists'],
     queryFn: fetchPlaylists,
     getNextPageParam: (lastPage, pages) =>{
-      console.log(lastPage.offset + lastPage.limit);
       return lastPage.next ? lastPage.offset + lastPage.limit : false
     },
   })
@@ -52,7 +53,6 @@ export function SidebarPlaylist() {
     return <PlaylistSkeleton/>
   }
   
-  console.log(data);
   return (
     <InfiniteScroll
       scrollableTarget="sidebar"
@@ -63,7 +63,7 @@ export function SidebarPlaylist() {
       loader={<PlaylistSkeleton/>}
     >
       {data?.pages.map((d: ISpotifyUserPlaylistResponse) => d.items.map((p, i) => (
-        <div key={i} className='flex justify-center items-center gap-4 rounded-md bg-base-100'>
+        <div onClick={() => router.push(`/playlist/${p.id}`)} key={i} className='cursor-pointer flex justify-center items-center gap-4 rounded-md bg-base-100'>
           <Image loading="lazy" className='rounded-l-md' src={p.images[0]?.url ?? "/playlist.jpg"} width={35} height={35} alt="Playlist image"/>
           <a 
             title={p.name.length > 15 ? p.name : ""}

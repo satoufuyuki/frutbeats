@@ -1,20 +1,29 @@
-import { faBackwardStep, faForwardStep, faPause, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBackwardStep, faForwardStep, faMusic, faPause, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import { usePlaybackState, useWebPlaybackSDKReady } from "react-spotify-web-playback-sdk";
 
 export function Player() {
-    return <div id="player" className="grid-cols-9 justify-center hidden items-center lg:grid fixed bottom-0 bg-base-300 py-4 px-6">
+    const webPlaybackSDKReady = useWebPlaybackSDKReady();
+
+    // console.log(playbackState, webPlaybackSDKReady);
+    return <div id="player" className="justify-around hidden items-center lg:flex fixed bottom-0 bg-base-300 py-4 px-6">
         <div className="grid grid-cols-3 text-start gap-x-4 items-center justify-center">
-            <Image
+            {/* <Image
                 src="/playlist.jpg"
                 alt="Music Cover"
                 width={64}
                 height={64}
                 className="rounded-md"
-            />
+            /> */}
+            <div className="flex h-[64px] w-[64px] rounded-md bg-gray-400">
+                <FontAwesomeIcon icon={faMusic} className="m-auto text-xl"/>
+            </div>
             <div className="col-span-2">
-                <h1 className="font-bold text-xl">Jealous</h1>
-                <p className="font-semibold text-lg">Al-hitam</p>
+                {/* <div className="w-11 h-2 bg-gray-400 rounded-md animate-pulse"></div>
+                <div className="mt-1 w-24 h-2 bg-gray-400 rounded-md animate-pulse"></div> */}
+                <h1 className="font-bold text-xl text-slate-100">Not Playing</h1>
+                <p className="font-normal text-sm text-slate-300">Unknown</p>
             </div>
         </div>
         <div className="col-span-5 grid grid-cols-10 items-center justify-center gap-x-4">
@@ -25,9 +34,11 @@ export function Player() {
                 </div>
                 <FontAwesomeIcon className="text-xl" icon={faForwardStep}/>
             </div>
-            <p className="text-end">02:00</p>
-            <progress className="progress progress-primary bg-base-content col-span-5 w-full" value="70" max="100"></progress>
-            <p>04:32</p>
+            
+            <p className="text-end">00:00</p>
+            <progress className="progress progress-primary bg-base-content col-span-5 w-full" value="0" max="100"></progress>
+            <p>00:00</p>
+            {/* <div className="w-11 h-2 bg-gray-400 rounded-md animate-pulse"></div> */}
         </div>
         <div className="flex col-span-2">
             <button className="ml-auto btn btn-ghost btn-circle ">

@@ -19,14 +19,15 @@ const handler = NextAuth(
     callbacks: {
       async jwt({token, account}) {
         if (account) {
+          console.log(account);
           token = Object.assign({}, token, { access_token: account.access_token });
         }
         return token
       },
       async session({session, token}) {
+        // console.log(session)
       if(session) {
         session = Object.assign({}, session, {access_token: token.access_token})
-        console.log(session);
         }
       return session
       }

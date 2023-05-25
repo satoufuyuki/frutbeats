@@ -16,7 +16,7 @@ export function Sidebar() {
     ];
     
     
-    return <div id="sidebar" className='no-scrollbar fixed left-0 h-screen max-h-screen overflow-y-scroll bg-base-300 p-12 shadow w-[300px]'>
+    return <div id="sidebar" className='lg:block fixed no-scrollbar hidden left-0 h-screen max-h-screen overflow-y-scroll bg-base-300 p-12 shadow w-[300px]'>
     <h1 className="font-bold text-xl">MENU</h1>
     <div className="h-[0.8rem]"></div>
     <ul className="flex flex-col gap-y-2">
