@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 
-@media (min-width: 1024px) {
+@media (min-width: 1320px) {
   #content, #player {
     width: -webkit-calc(100% - 300px);
     width:    -moz-calc(100% - 300px);
