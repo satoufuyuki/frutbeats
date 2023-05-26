@@ -25,7 +25,7 @@ export function SidebarPlaylist() {
       `https://api.spotify.com/v1/me/playlists?offset=${pageParam}&limit=20`,
       {
         headers: {
-          Authorization: `Bearer ${sessionData?.access_token}`,
+          Authorization: `Bearer ${sessionData?.accessToken}`,
         },
       }
     )

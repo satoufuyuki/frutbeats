@@ -23,9 +23,10 @@ export default function PlaylistLayout({
       },
     });
 
+    console.log(data);
     const getOAuthToken = useCallback((cb: any) => {
       if (status === "authenticated") {
-        cb(data.access_token);
+        cb(data.accessToken);
       }
     }, [status, data]);
   
@@ -52,10 +53,10 @@ export default function PlaylistLayout({
       initialDeviceName="FrutBeats"
       initialVolume={1}
       getOAuthToken={getOAuthToken}>
-      <div className='flex'>
+      <div className='block lg:flex'>
         <Sidebar/>
         <div id="content">
-          <div className='p-12 lg:translate-x-[300px]'>
+          <div className='md:p-12 py-10 px-6 lg:translate-x-[300px] mt-12'>
             {children}
           </div>
           <Player/>
