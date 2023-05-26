@@ -1,44 +1,94 @@
-import { faBackwardStep, faForwardStep, faMusic, faPause, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faBackwardStep, faForwardStep, faMusic, faPause, faPlay, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { usePlaybackState, useWebPlaybackSDKReady } from "react-spotify-web-playback-sdk";
+import { usePlaybackState, usePlayerDevice, useSpotifyPlayer, useWebPlaybackSDKReady } from "react-spotify-web-playback-sdk";
+import { readableTime } from "../utils/readableTime";
+import { useState } from "react";
+
+const AlbumImageDefault = () => <div className="flex h-[64px] w-[64px] rounded-md bg-gray-400">
+<FontAwesomeIcon icon={faMusic} className="m-auto text-xl"/>
+</div>
 
 export function Player() {
-    const webPlaybackSDKReady = useWebPlaybackSDKReady();
+    const player = useSpotifyPlayer();
+    const playbackState = usePlaybackState(true, 1000);
+    const [playPauseDisabled, setPlayPauseDisabled] = useState(false);
+    const [skipDisabled, setSkipDisabled] = useState(false);
 
-    // console.log(playbackState, webPlaybackSDKReady);
-    return <div id="player" className="justify-around hidden items-center lg:flex fixed bottom-0 bg-base-300 py-4 px-6">
-        <div className="grid grid-cols-3 text-start gap-x-4 items-center justify-center">
-            {/* <Image
-                src="/playlist.jpg"
-                alt="Music Cover"
-                width={64}
-                height={64}
-                className="rounded-md"
-            /> */}
-            <div className="flex h-[64px] w-[64px] rounded-md bg-gray-400">
-                <FontAwesomeIcon icon={faMusic} className="m-auto text-xl"/>
-            </div>
+    console.log(playbackState);
+
+    const playPause = () => {
+        if (!playbackState?.track_window?.current_track || !player) return;
+        setPlayPauseDisabled(true);
+        if (playbackState.paused) {
+            player.resume().then(() => setPlayPauseDisabled(false));
+        } else {
+            player.pause().then(() => setPlayPauseDisabled(false));
+        }
+    };
+
+    const skip = (direction: "next" | "previous") => {
+        if (!playbackState?.track_window?.current_track || !player) return;
+        if (direction === "next" && playbackState.disallows.skipping_next) return;
+        if (direction === "previous" && playbackState.disallows.skipping_prev) return;
+        setPlayPauseDisabled(true);
+        setSkipDisabled(true);
+
+        switch (direction) {
+            case "next":
+                player.nextTrack().then(() => {
+                    setPlayPauseDisabled(false);
+                    setSkipDisabled(false);
+                });
+                break;
+            case "previous":
+                player.previousTrack().then(() => {
+                    setPlayPauseDisabled(false);
+                    setSkipDisabled(false);
+                });
+                break;
+        }
+    }
+
+    return <div id="player"
+        className="flex justify-between w-full items-center fixed bg-base-300 py-4 px-6
+            bottom-20 rounded-md shadow-md mx-5 
+            lg:bottom-0 lg:mx-0 lg:rounded-none lg:shadow-none 
+        "
+    >
+        <div className="flex text-start gap-x-4 items-center justify-center">
+            {playbackState !== null && playbackState.track_window?.current_track?.album?.images.length > 0 ? (
+                 <Image
+                    src={playbackState.track_window.current_track.album.images[0].url}
+                    alt="Music Cover"
+                    width={64}
+                    height={64}
+                    className="rounded-md"
+                />
+            ) : <AlbumImageDefault/>}
             <div className="col-span-2">
-                {/* <div className="w-11 h-2 bg-gray-400 rounded-md animate-pulse"></div>
-                <div className="mt-1 w-24 h-2 bg-gray-400 rounded-md animate-pulse"></div> */}
-                <h1 className="font-bold text-xl text-slate-100">Not Playing</h1>
-                <p className="font-normal text-sm text-slate-300">Unknown</p>
+                <h1 className="font-bold text-xl text-slate-100">{playbackState
+                    ? playbackState.track_window?.current_track?.name : "Not Playing"}</h1>
+                <p className="font-normal text-sm text-slate-300">{playbackState
+                    ? playbackState.track_window?.current_track?.artists[0]?.name : "Unknown"}</p>
             </div>
         </div>
-        <div className="col-span-5 grid grid-cols-10 items-center justify-center gap-x-4">
+        <div className="hidden lg:grid grid-cols-10 items-center justify-center gap-x-4">
             <div className="flex justify-center items-center gap-x-5 col-span-3">
-                <FontAwesomeIcon className="text-xl" icon={faBackwardStep} />
-                <div className='rounded-full w-12 h-12 bg-primary flex items-center justify-center'>
-                    <FontAwesomeIcon className="text-xl m-auto" icon={faPause}/>
-                </div>
-                <FontAwesomeIcon className="text-xl" icon={faForwardStep}/>
+                <button className={`btn btn-ghost text-white ${playbackState?.disallows?.skipping_prev || skipDisabled ? "btn-disabled" : ""}`} disabled={(playbackState?.disallows?.skipping_prev || skipDisabled) ?? false} onClick={() => skip("previous")}>
+                    <FontAwesomeIcon className="text-xl" icon={faBackwardStep} />
+                </button>
+                <button className={`btn btn-primary btn-circle text-white ${playPauseDisabled ? "btn-disabled" : ""}`} disabled={playPauseDisabled} onClick={() => playPause()}>
+                    {playbackState?.paused ? <FontAwesomeIcon icon={faPlay}/> : <FontAwesomeIcon icon={faPause}/>}
+                </button>
+                <button className={`btn btn-ghost text-white ${playbackState?.disallows?.skipping_next || skipDisabled ? "btn-disabled" : ""}`} disabled={(playbackState?.disallows?.skipping_next || skipDisabled) ?? false} onClick={() => skip("next")}>
+                    <FontAwesomeIcon className="text-xl" icon={faForwardStep} />
+                </button>
             </div>
             
-            <p className="text-end">00:00</p>
-            <progress className="progress progress-primary bg-base-content col-span-5 w-full" value="0" max="100"></progress>
-            <p>00:00</p>
-            {/* <div className="w-11 h-2 bg-gray-400 rounded-md animate-pulse"></div> */}
+            <p className="text-end">{readableTime(playbackState?.position ?? 0)}</p>
+            <progress className="progress progress-primary bg-base-content col-span-5 w-full" value={(playbackState?.position ?? 0) / (playbackState?.track_window?.current_track?.duration_ms ?? 0) * 100} max="100"></progress>
+            <p>{readableTime(playbackState?.track_window?.current_track?.duration_ms ?? 0)}</p>
         </div>
         <div className="flex col-span-2">
             <button className="ml-auto btn btn-ghost btn-circle ">

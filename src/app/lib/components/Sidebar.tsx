@@ -2,16 +2,20 @@ import { faHeart, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { SidebarPlaylist } from "./SidebarPlaylist";
+import { useRouter } from "next/navigation";
 
 export function Sidebar() {
+  const router = useRouter();
     const menu = [
         {
             icon:  <FontAwesomeIcon icon={faHome}/>,
-            name: "Home"
+            name: "Home",
+            href: "/"
         },
         {
             icon: <FontAwesomeIcon icon={faHeart}/>,
-            name: "Likes"
+            name: "Likes",
+            href: "/"
         }
     ];
     
@@ -21,7 +25,7 @@ export function Sidebar() {
     <div className="h-[0.8rem]"></div>
     <ul className="flex flex-col gap-y-2">
       {menu.map((m, i) =>
-      <li key={i} className='flex justify-center items-center gap-4 rounded-md bg-base-100'>
+      <li onClick={() => router.push(m.href)} key={i} className='cursor-pointer flex justify-center items-center gap-4 rounded-md bg-base-100'>
         <div className='flex items-center justify-center w-10 bg-primary p-2 rounded-l-md'>
           {m.icon}
         </div>

@@ -2,15 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-#content, #player {
-  width: -webkit-calc(100% - 300px);
-  width:    -moz-calc(100% - 300px);
-  width:         calc(100% - 300px);
+
+@media (min-width: 1024px) {
+  #content, #player {
+    width: -webkit-calc(100% - 300px);
+    width:    -moz-calc(100% - 300px);
+    width:         calc(100% - 300px);
+  }
+
+  #player {
+    transform: translateX(300px);
+  }
 }
 
-#player {
-  transform: translateX(300px);
-}
 
 @layer utilities {
   @keyframes svg-left-waves {

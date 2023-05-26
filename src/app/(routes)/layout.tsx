@@ -8,6 +8,7 @@ import { Loader } from "../lib/components/Loader";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "../lib/components/Sidebar";
+import { BottomNav } from "../lib/components/BottomNav";
 
 export default function PlaylistLayout({
   children,
@@ -51,15 +52,16 @@ export default function PlaylistLayout({
       initialDeviceName="FrutBeats"
       initialVolume={1}
       getOAuthToken={getOAuthToken}>
-    <div className='flex'>
-      <Sidebar/>
-      <div id="content">
-        <div className='p-12 lg:translate-x-[300px]'>
-          {children}
+      <div className='flex'>
+        <Sidebar/>
+        <div id="content">
+          <div className='p-12 lg:translate-x-[300px]'>
+            {children}
+          </div>
+          <Player/>
+          <BottomNav/>
         </div>
-        <Player/>
       </div>
-    </div>
     </WebPlaybackSDK>
     </>
   )

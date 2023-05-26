@@ -7,8 +7,10 @@ import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { usePlayerDevice, useSpotifyPlayer } from "react-spotify-web-playback-sdk";
 
 export default function PlaylistDetail({ params }: { params: Params }) {
+    const device = usePlayerDevice();
     const router = useRouter();
     const { data, status } = useSession({
         required: true,
@@ -39,6 +41,18 @@ export default function PlaylistDetail({ params }: { params: Params }) {
     
     if (status === "loading" || !playlistData) return <div className="h-screen"><Loader className="m-auto"/></div>;
     
+    const playPlaylist = (uri: string) => {
+        if (device === null) return;
+        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device.device_id}`, {
+            method: "PUT",
+            body: JSON.stringify({ context_uri: uri, position_ms: 0 }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${data.access_token}`,
+            },
+        });
+    }
+
     return (<>
         <div className="flex gap-x-4 ">
             {playlistData.images.length > 0 &&
@@ -56,7 +70,7 @@ export default function PlaylistDetail({ params }: { params: Params }) {
            <div className="flex flex-col gap-y-2">
                 <h1 className="font-bold text-2xl">{playlistData.name}</h1>
                 <p className="font-normal text-gray-500">{playlistData.description}</p>
-                <button className="btn btn-primary btn-circle text-white"><FontAwesomeIcon icon={faPlay}/></button>
+                <button className="btn btn-primary btn-circle text-white" onClick={() => playPlaylist(playlistData.uri)}><FontAwesomeIcon icon={faPlay}/></button>
             </div>  
         </div>
     </>);
