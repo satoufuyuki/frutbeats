@@ -1,6 +1,5 @@
-import NextAuth, { DefaultSession, TokenSet } from "next-auth"
-import SpotifyProvider from "next-auth/providers/spotify"
-
+import NextAuth from "next-auth";
+import SpotifyProvider from "next-auth/providers/spotify";
 
 async function refreshAccessToken(token: Record<string, string>) {
   try {
@@ -10,9 +9,7 @@ async function refreshAccessToken(token: Record<string, string>) {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`
-        ).toString("base64")}`,
+        Authorization: `Basic ${Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString("base64")}`,
       },
       body: new URLSearchParams({
         grant_type: "refresh_token",
@@ -27,68 +24,63 @@ async function refreshAccessToken(token: Record<string, string>) {
       accessToken: data.access_token,
       accessTokenExpires: Date.now() + data.expires_in * 1000,
       refreshToken: data.refresh_token ?? token.refreshToken, // Fall back to old refresh token
-    }
+    };
   } catch (e) {
     return {
       ...token,
       error: "RefreshAccessTokenError",
-    }
-
+    };
   }
 }
-const handler = NextAuth(
-  {
-    // Configure one or more authentication providers
-    providers: [
-      SpotifyProvider({
-        clientId: process.env.SPOTIFY_CLIENT_ID!,
-        clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-        authorization: {
-          params: {
-            scope: "streaming user-read-email user-read-private"
-          }
-        }
-      }),
-      // ...add more providers here
-    ],
-    callbacks: {
-      async jwt({token, account, user}) {
-        // Initial sign in
-        if (account && user) {
-          return {
-            accessToken: account.access_token,
-            accessTokenExpires: account.expires_at!,
-            refreshToken: account.refresh_token,
-            user,
-          }
-        }
-
-        // Return previous token if the access token has not expired yet
-        if (Date.now() < (token.accessTokenExpires as number)) {
-          return token
-        }
-          
-        // Access token has expired, try to update it
-        return refreshAccessToken(token as any)
+const handler = NextAuth({
+  // Configure one or more authentication providers
+  providers: [
+    SpotifyProvider({
+      clientId: process.env.SPOTIFY_CLIENT_ID!,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "streaming user-read-email user-read-private user-library-read user-library-modify",
+        },
       },
-      async session ({session, token}) {
-        if (session) {
-          session = Object.assign({}, session, {
-            error: token.error,
-            user: token.user,
-            expires: token.accessTokenExpires,
-            accessToken: token.accessToken,
-          })
-        }
-        
-        return session
+    }),
+    // ...add more providers here
+  ],
+  callbacks: {
+    async jwt({ token, account, user }) {
+      // Initial sign in
+      if (account && user) {
+        return {
+          accessToken: account.access_token,
+          accessTokenExpires: account.expires_at!,
+          refreshToken: account.refresh_token,
+          user,
+        };
       }
-  
+
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      // Access token has expired, try to update it
+      return refreshAccessToken(token as any);
     },
-  
-  }
-);
-export { handler as GET, handler as POST }
+    async session({ session, token }) {
+      if (session) {
+        session = Object.assign({}, session, {
+          error: token.error,
+          user: token.user,
+          expires: token.accessTokenExpires,
+          accessToken: token.accessToken,
+        });
+      }
+
+      return session;
+    },
+  },
+});
+export { handler as GET, handler as POST };
 
 declare module "next-auth" {
   /**
