@@ -1,6 +1,5 @@
 "use client";
 import { Loader } from "@/app/lib/components/Loader";
-import { Meta } from "@/app/lib/components/Meta";
 import { PlaylistItem } from "@/app/lib/components/PlaylistItem";
 import { faMusic, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,7 +41,6 @@ export default function PlaylistDetail({ params }: { params: Params }) {
   if (status === "loading" || !playlistData)
     return (
       <>
-        <Meta title="Playlist" />
         <div className="h-screen">
           <Loader className="m-auto" />
         </div>
@@ -63,7 +61,6 @@ export default function PlaylistDetail({ params }: { params: Params }) {
 
   return (
     <>
-      <Meta title={playlistData.name} />
       <div className="flex gap-x-4 flex-col md:flex-row gap-y-2">
         {playlistData.images.length > 0 && <Image src={playlistData.images[0]?.url} width={150} height={150} className="rounded-lg w-full md:w-[150px]" alt="Playlist Image" />}
         {!playlistData.images.length && (

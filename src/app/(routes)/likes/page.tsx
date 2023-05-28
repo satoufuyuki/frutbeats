@@ -1,6 +1,5 @@
 "use client";
 import { Loader } from "@/app/lib/components/Loader";
-import { Meta } from "@/app/lib/components/Meta";
 import { PlaylistItem } from "@/app/lib/components/PlaylistItem";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -36,7 +35,6 @@ export default function Likes() {
   if (sessionStatus === "loading") {
     return (
       <>
-        <Meta title="Likes" />
         <div className="flex h-screen">
           <Loader className="m-auto" />
         </div>

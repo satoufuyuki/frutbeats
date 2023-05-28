@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { Meta } from "../lib/components/Meta";
 
 export default function About() {
   const people = [
@@ -28,7 +27,6 @@ export default function About() {
   ];
   return (
     <>
-      <Meta title="About Us" />
       <div className="h-[8rem]"></div>
       <h1 className="text-center font-extrabold text-3xl mb-6">Our Developer</h1>
       <div className="flex flex-col lg:flex-row flex-shrink max-w-full gap-8 justify-center items-center m-auto">

@@ -4,7 +4,6 @@ import { PlaylistCard } from "../lib/components/PlaylistCard";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PlaylistItem } from "../lib/components/PlaylistItem";
-import { Meta } from "../lib/components/Meta";
 
 export default function Home() {
   const router = useRouter();
@@ -71,7 +70,6 @@ export default function Home() {
 
   return (
     <>
-      <Meta title="Home" />
       <div className="flex justify-between items-start flex-col lg:flex-row lg:items-center gap-y-4">
         <h1 className="font-bold text-2xl">
           Good {time}, {data?.user?.name}

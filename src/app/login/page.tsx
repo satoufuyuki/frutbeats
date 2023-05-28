@@ -6,7 +6,6 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Loader } from "../lib/components/Loader";
-import { Meta } from "../lib/components/Meta";
 
 export default function Login() {
   const { status } = useSession();
@@ -14,7 +13,6 @@ export default function Login() {
   if (status === "loading") {
     return (
       <>
-        <Meta title="Login" />
         <div className="flex h-screen">
           <Loader className="m-auto" />
         </div>
@@ -26,7 +24,6 @@ export default function Login() {
     router.replace("/");
     return (
       <>
-        <Meta title="Login" />
         <div className="flex h-screen">
           <Loader className="m-auto" />
         </div>
@@ -36,7 +33,6 @@ export default function Login() {
 
   return (
     <>
-      <Meta title="Login" />
       <Image src="/logo.svg" width={150} height={500} alt="FrutBits Logo" className="right-0 rotate-[30deg] fixed top-0 animate-[svg-right-waves_5s_infinite_alternate] " />
 
       <div className="flex h-screen">
