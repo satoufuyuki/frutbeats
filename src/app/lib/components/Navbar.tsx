@@ -1,7 +1,7 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faQuestion, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,6 +33,12 @@ export function Navbar() {
                   <FontAwesomeIcon icon={faRightFromBracket} />
                 </span>
                 Logout
+              </Link>
+              <Link href="/about">
+                <span>
+                  <FontAwesomeIcon icon={faQuestion} />
+                </span>
+                About this project
               </Link>
             </li>
           </ul>
