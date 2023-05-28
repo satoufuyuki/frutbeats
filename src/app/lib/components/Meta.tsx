@@ -3,6 +3,9 @@
 import Head from "next/head";
 
 export function Meta({ title, name = "FrutBeats", description, color = "#f28c18" }: { title: string; name?: string; description?: string; color?: string }) {
+  if (!description)
+    description = `FrutBeats adalah tempat online yang menghadirkan pengalaman pemutar musik terbaik. Temukan artis baru dan eksplorasi koleksi musik pilihan sesuai suasana hati dan genre yang kamu sukai. Nikmati antarmuka yang elegan, dan fitur yang canggih. Biarkan musik bermain di FrutBeats!
+  `;
   return (
     <>
       <Head>
