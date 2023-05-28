@@ -48,7 +48,8 @@ export default function Home() {
       setTracks(d.tracks.items);
     };
 
-    fetchTracks();
+    const timeout = setTimeout(fetchTracks, 500);
+    return () => clearTimeout(timeout);
   }, [query, data]);
 
   useEffect(() => {
@@ -75,7 +76,7 @@ export default function Home() {
         </h1>
         <input
           value={query.get("q") ?? ""}
-          onChange={(e) => router.push(`/?q=${encodeURIComponent(e.currentTarget.value)}`)}
+          onChange={(e) => router.replace(`/?q=${encodeURIComponent(e.currentTarget.value)}`)}
           type="text"
           placeholder="Search a song"
           className="input input-bordered h-10 w-full max-w-xs"
@@ -86,7 +87,7 @@ export default function Home() {
         if (query.has("q") && query.get("q") !== "") {
           return (
             <>
-              <div className="flex flex-col w-full gap-y-2 mt-12 ">
+              <div className="flex flex-col w-full gap-y-2">
                 {tracks.map((x: any, i: number) => (
                   <PlaylistItem key={i} name={x.name} artist={x.artists[0].name} image={x.album.images[0].url} uri={x.uri} id={x.id} />
                 ))}
