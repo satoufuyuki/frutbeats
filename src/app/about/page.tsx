@@ -28,10 +28,10 @@ export default function About() {
   return (
     <>
       <div className="h-[8rem]"></div>
-      <h1 className="text-center font-extrabold text-3xl mb-4">Our Developer</h1>
-      <div className="flex flex-grow flex-shrink max-w-full gap-x-8 justify-center items-center m-auto">
+      <h1 className="text-center font-extrabold text-3xl mb-6">Our Developer</h1>
+      <div className="flex flex-col lg:flex-row flex-shrink max-w-full gap-8 justify-center items-center m-auto">
         {people.map((x, i) => (
-          <div key={i} className="card bg-base-300 shadow-xl flex flex-col">
+          <div key={i} className="card w-60 bg-base-300 shadow-xl flex flex-col">
             <Image src={x.image} alt={x.name + " Picture"} width={150} height={150} className="mx-auto rounded mt-5" />
             <div className="card-body text-center">
               <h2 className="card-title m-auto">{x.name}</h2>
